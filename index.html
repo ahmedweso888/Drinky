@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Drinky Cafe | درينكي كافيه</title>
+    <style>
+        /* إعدادات المتغيرات والألوان العامة للموقع */
+        :root {
+            --lathe-color: #D2B48C;
+            --cream: #F5F5DC;
+            --dark-brown: #1a0f0a;
+            --light-brown: #2B1B17;
+        }
+
+        /* تصفير الحواف وإعدادات الخلفية الثابتة */
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--cream);
+            scroll-behavior: smooth;
+            overflow-x: hidden;
+            background: linear-gradient(rgba(26, 15, 10, 0.65), rgba(26, 15, 10, 0.75)), 
+                        url('BACKEND.png') no-repeat center center fixed;
+            background-size: cover;
+        }
+
+        /* 1. تأثير إنترو الأحرف الترحيبية اللانهائية الطائرة */
+        .intro-marquee {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            z-index: 999;
+            overflow: hidden;
+            pointer-events: none;
+            /* تختفي الشاشة وتتمسح تماماً بعد 4.5 ثانية */
+            animation: removeIntro 0.5s ease-in-out 4.5s forwards;
+        }
+
+        .marquee-wrapper {
+            display: flex;
+            white-space: nowrap;
+            width: 100%;
+            direction: ltr; 
+        }
+
+        .marquee-group {
+            display: flex;
+            align-items: center;
+            /* أنيميشن الحركة السلسة والمعكوسة من اليمين إلى اليسار */
+            animation: scrollMarqueeRightToLeft 7s linear infinite;
+        }
+
+        .marquee-group span {
+            font-size: 40vw; 
+            font-weight: 900;
+            text-transform: uppercase;
+            font-family: 'Arial Black', Gadget, sans-serif;
+            display: inline-block;
+            line-height: 1;
+            text-shadow: 0px 10px 30px rgba(0, 0, 0, 0.8);
+        }
+
+        /* الأحرف المفرغة الأولى DRI */
+        .hollow-letter {
+            color: transparent;
+            -webkit-text-stroke: 4px var(--lathe-color);
+        }
+
+        /* الأحرف المليانة الأخيرة NKY */
+        .filled-letter {
+            color: var(--lathe-color);
+            margin-right: 60px; 
+        }
+
+        /* حسابات أنيميشن الحركة اللانهائية المعكوسة */
+        @keyframes scrollMarqueeRightToLeft {
+            0% { transform: translateX(0%); }
+            100% { transform: translateX(-50%); }
+        }
+
+        /* أنيميشن إخفاء وحذف طبقة الإنترو */
+        @keyframes removeIntro {
+            0% { opacity: 1; visibility: visible; }
+            100% { opacity: 0; visibility: hidden; display: none; }
+        }
+
+        /* 2. محتوى الموقع والمنيو (يبدأ مخفياً ثم يظهر بسلاسة) */
+        .main-content {
+            opacity: 0;
+            animation: fadeInContent 1s ease-in-out 4.5s forwards;
+            padding-bottom: 80px;
+        }
+
+        @keyframes fadeInContent {
+            to { opacity: 1; }
+        }
+
+        /* قسم الهيدر والترحيب المحتوي على اللوجو */
+        header {
+            min-height: 50vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 40px 20px 20px 20px;
+        }
+
+        /* تنسيق وتحديد اللوجو الدائري المستخلص من صورتك */
+        .cafe-logo {
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            object-fit: cover;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6);
+            border: 3px solid var(--lathe-color);
+            margin-bottom: 20px;
+            transition: transform 0.3s ease;
+        }
+
+        .cafe-logo:hover {
+            transform: scale(1.05) rotate(5deg);
+        }
+
+        header h1 {
+            font-size: 2.8rem;
+            color: var(--lathe-color);
+            margin: 10px 0;
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.8);
+        }
+
+        header p {
+            margin: 0;
+            font-size: 1.3rem;
+            text-shadow: 1px 1px 4px rgba(0,0,0,0.8);
+        }
+
+        /* تنسيق الحاويات والأقسام */
+        .section-container {
+            max-width: 900px;
+            margin: 0 auto 60px auto;
+            padding: 0 20px;
+            text-align: center;
+        }
+
+        .section-title {
+            font-size: 2.3rem;
+            color: var(--lathe-color);
+            margin-bottom: 40px;
+            border-bottom: 2px solid var(--lathe-color);
+            display: inline-block;
+            padding-bottom: 10px;
+            width: 100%;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        /* تصميم المنيو النصي السريع المتجاوب */
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .menu-item {
+            background: rgba(26, 15, 10, 0.75);
+            border: 1px solid rgba(210, 180, 140, 0.3);
+            border-radius: 15px;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            transition: transform 0.3s, border-color 0.3s;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+
+        .menu-item:hover {
+            transform: translateY(-5px);
+            border-color: var(--lathe-color);
+        }
+
+        .item-info h3 {
+            margin: 0 0 5px 0;
+            color: var(--cream);
+            font-size: 1.2rem;
+            text-align: right;
+        }
+
+        .item-info p {
+            margin: 0;
+            font-size: 0.9rem;
+            color: #cbbba8;
+            text-align: right;
+        }
+
+        .item-price {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: var(--lathe-color);
+        }
+
+        /* تصميم قسم صورة المنيو الكبيرة */
+        .menu-image-container {
+            background: rgba(26, 15, 10, 0.75);
+            border: 1px solid rgba(210, 180, 140, 0.4);
+            border-radius: 15px;
+            padding: 15px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+            backdrop-filter: blur(8px);
+            display: inline-block;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .menu-img {
+            width: 100%;
+            max-width: 600px;
+            height: auto;
+            border-radius: 10px;
+            transition: transform 0.4s ease;
+            cursor: pointer;
+        }
+
+        .menu-img:hover {
+            transform: scale(1.02);
+        }
+
+        /* تصميم استمارة طلب المشروبات (الفورم) */
+        .order-form {
+            background: rgba(26, 15, 10, 0.8);
+            border: 1px solid rgba(210, 180, 140, 0.4);
+            border-radius: 15px;
+            padding: 35px;
+            text-align: right;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+            backdrop-filter: blur(8px);
+            box-sizing: border-box;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 1.1rem;
+            color: var(--lathe-color);
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid rgba(210, 180, 140, 0.4);
+            background: rgba(43, 27, 23, 0.7);
+            color: var(--cream);
+            font-size: 1rem;
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-family: inherit;
+        }
+
+        .form-group input:focus, .form-group textarea:focus {
+            outline: none;
+            border-color: var(--lathe-color);
+            box-shadow: 0 0 10px rgba(210, 180, 140, 0.4);
+        }
+
+        /* خيارات التيك أواي وداخل الكافيه */
+        .radio-group {
+            display: flex;
+            gap: 40px;
+            margin-top: 10px;
+        }
+
+        .radio-option {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            font-size: 1.1rem;
+        }
+
+        .radio-option input {
+            width: 20px;
+            height: 20px;
+            accent-color: var(--lathe-color);
+            cursor: pointer;
+        }
+
+        /* زر الإرسال وتأكيد الطلب */
+        .submit-btn {
+            width: 100%;
+            background-color: var(--lathe-color);
+            color: var(--dark-brown);
+            padding: 16px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+            font-family: inherit;
+        }
+
+        .submit-btn:hover {
+            background-color: var(--cream);
+            transform: translateY(-2px);
+        }
+
+        /* فوتر الموقع */
+        footer {
+            text-align: center;
+            padding: 20px;
+            font-size: 0.9rem;
+            color: #b5a491;
+            border-top: 1px solid rgba(210, 180, 140, 0.2);
+            margin-top: 50px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 1. شريط الأحرف اللانهائي العملاق الطائر من اليمين لليسار -->
+    <div class="intro-marquee">
+        <div class="marquee-wrapper">
+            <div class="marquee-group">
+                <span class="hollow-letter">DRI</span><span class="filled-letter">NKY</span>
+                <span class="hollow-letter">DRI</span><span class="filled-letter">NKY</span>
+            </div>
+            <div class="marquee-group">
+                <span class="hollow-letter">DRI</span><span class="filled-letter">NKY</span>
+                <span class="hollow-letter">DRI</span><span class="filled-letter">NKY</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. محتوى الموقع والمنيو الرئيسي -->
+    <div class="main-content">
+        <!-- هيدر الموقع ويحتوي على اللوجو الدائري واسم الكافيه -->
+        <header>
+            <img src="logo.png" alt="Drinky Cafe Logo" class="cafe-logo">
+            <h1>درينكي كافيه</h1>
+            <p>أهلاً بكم في عالم القهوة المختصة والحلويات المميزة</p>
+        </header>
+
+        <!-- قسم المنيو السريع (الأكثر مبيعاً) -->
+        <section class="section-container">
+            <h2 class="section-title">الأكثر مبيعاً</h2>
+            <div class="menu-grid">
+                
+                <div class="menu-item">
+                    <div class="item-info">
+                        <h3>قهوه تركي </h3>
+                        <p>قهوه تركي ساده</p>
+                    </div>
+                    <div class="item-price">25 EGP</div>
+                </div>
+
+                <div class="menu-item">
+                    <div class="item-info">
+                        <h3>قهوه فرساوي </h3>
+                        <p>قهوه بالحليب</p>
+                    </div>
+                    <div class="item-price">35 EGP</div>
+                </div>
+
+                <div class="menu-item">
+                    <div class="item-info">
+                        <h3>كروت واي فاي لمده ساعه ونص </h3>
+                
+                    </div>
+                    <div class="item-price">15 EGP</div>
+                </div>
+
+
+            </div>
+        </section>
+
+        <!-- قسم عرض صورة المنيو الكبيرة والورقية للكافيه -->
+        <section class="section-container">
+            <h2 class="section-title">قائمة المشروبات بالكامل (المنيو)</h2>
+            <div class="menu-image-container">
+                <!-- يمكنك تغيير رابط الصورة هنا لاحقاً لصورة المنيو الفعلي الخاص بكم -->
+                <img src="https://unsplash.com" alt="منيو درينكي كافيه الكامل" class="menu-img">
+            </div>
+        </section>
+
+        <!-- قسم استمارة طلب المشروبات أونلاين -->
+        <section class="section-container">
+            <h2 class="section-title">اطلب مشروبك الآن أونلاين</h2>
+            <form class="order-form" id="cafeOrderForm">
+                
+                <div class="form-group">
+                    <label for="customerName">اسم العميل:</label>
+                    <input type="text" id="customerName" required placeholder="اكتب اسمك الثلاثي هنا">
+                </div>
+
+                <div class="form-group">
+                    <label for="customerOrder">الطلب والملاحظات بالتفصيل:</label>
+                    <textarea id="customerOrder" rows="4" required placeholder="مثال: 2 لاتيه بارد وسط، 1 إسبريسو بدون سكر"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>نوع استلام الطلب:</label>
+                    <div class="radio-group">
+                        <label class="radio-option">
+                            <input type="radio" name="orderType" value="تيك أواي (Takeaway)" checked>
+                            <span>تيك أواي 🛍️</span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="orderType" value="داخل الكافيه (In Cafe)">
+                            <span>داخل الكافيه ☕</span>
+                        </label>
+                    </div>
+                </div>
+
+                <button type="submit" class="submit-btn" id="submitBtn">تأكيد وإرسال الطلب الفوري</button>
+            </form>
+        </section>
+
+        <!-- فوتر الموقع -->
+                <footer>
+            &copy; 2026 درينكي كافيه - جميع الحقوق محفوظة . <br> 
+            Developed by <strong style="color: var(--lathe-color);">Ahmed Essam</strong> ☕
+        </footer>
+
+    </div>
+           <script>
+        document.getElementById('cafeOrderForm').addEventListener('submit', function(e) {
+            e.preventDefault(); 
+
+            const submitButton = document.getElementById('submitBtn');
+            submitButton.innerText = "جاري إرسال طلبك...";
+            submitButton.disabled = true;
+
+            // رابط الويب هوك الفريد الخاص بك
+            const webhookURL = 'https://webhook.site/235e7513-5e83-435c-9f85-e7aaa08c3fad';
+
+            const customerName = document.getElementById('customerName').value;
+            const customerOrder = document.getElementById('customerOrder').value;
+            const orderType = document.querySelector('input[name="orderType"]:checked').value;
+
+            // تحويل البيانات إلى نص مفرود تماماً لتخطي حظر الحماية
+            const textPayload = `اسم العميل: ${customerName}\nنوع الاستلام: ${orderType}\nتفاصيل الطلب: ${customerOrder}\nتاريخ الطلب: ${new Date().toLocaleString('ar-EG')}`;
+
+            // إرسال البيانات مع تفعيل نمط no-cors لتفادي تعقيدات المتصفحات المحلية
+            fetch(webhookURL, {
+                method: 'POST',
+                mode: 'no-cors', /* تجاوز الحماية للقراءة البرمجية */
+                headers: {
+                    'Content-Type': 'text/plain' 
+                },
+                body: textPayload
+            })
+            .then(() => {
+                /* طالما أن الـ POST وصل للوحة التحكم بنجاح، يظهر إشعار النجاح مباشرة */
+                alert('تم استلام طلبك بنجاح وجاري تحضير قهوتك الآن في درينكي كافيه! 🎉');
+                document.getElementById('cafeOrderForm').reset();
+            })
+            .catch(error => {
+                console.error('Webhook Error:', error);
+                alert('حدث خطأ في الاتصال، يرجى إعادة المحاولة.');
+            })
+            .finally(() => {
+                submitButton.innerText = "تأكيد وإرسال الطلب الفوري";
+                submitButton.disabled = false;
+            });
+        });
+    </script>
+
+</body>
+</html>
